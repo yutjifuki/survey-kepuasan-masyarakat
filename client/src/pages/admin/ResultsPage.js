@@ -198,7 +198,9 @@ const ResultsPage = () => {
     return filtered;
   }, [results, activeFilters]);
 
-  const ikmValues = results.map(calculateIKMPerQuestion);
+  const ikmValues = results
+    .filter((result) => result.totalAnswersForThisQuestion > 0)
+    .map(calculateIKMPerQuestion);
   const monthlyIKM = calculateMonthlyIKM();
 
   const avgIKM =

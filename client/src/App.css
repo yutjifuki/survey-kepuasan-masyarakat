@@ -25,7 +25,6 @@ input:focus {
   min-height: 100vh;
 }
 
-/* Area konten utama */
 .main-content-area {
   flex-grow: 1;
   display: flex;
@@ -34,7 +33,6 @@ input:focus {
   background-color: #fbfffe;
 }
 
-/* Navbar */
 .navbar {
   background-color: #282d33;
   padding: 1rem 2rem;
@@ -182,7 +180,6 @@ input:focus {
   opacity: 0.85;
 }
 
-/* Homepage */
 .homepage-banner {
   background-color: #faa916;
   color: #fbfffe;
@@ -252,7 +249,6 @@ input:focus {
   font-size: 1.2rem;
 }
 
-/* IKM Showcase Section - NEW */
 .ikm-showcase-section {
   padding: 4rem 2rem;
   background: linear-gradient(180deg, #fbfffe 0%, #f8fafc 100%);
@@ -379,7 +375,6 @@ input:focus {
   font-weight: 500;
 }
 
-/* Stats Section - Enhanced */
 .stats-section {
   padding: 4rem 2rem;
   text-align: center;
@@ -516,7 +511,6 @@ input:focus {
   border-radius: 10px;
 }
 
-/* Call to Action Section - NEW */
 .cta-section {
   background: linear-gradient(135deg, #faa916 0%, #f39c12 100%);
   padding: 4rem 2rem;
@@ -568,7 +562,6 @@ input:focus {
   font-weight: 500;
 }
 
-/* Survey Page & Forms */
 .survey-page-container {
   margin-top: 0px;
   box-sizing: border-box;
@@ -782,8 +775,7 @@ input:focus {
   margin-bottom: 1.5rem;
   padding: 1rem;
   background-color: #f9f9f9;
-  border-left: 5px solid #faa916;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
 }
 
 .survey-question-item p {
@@ -822,6 +814,202 @@ input:focus {
 
 .animate-on-visible.is-visible {
   animation: fadeInFallDown 0.7s ease-out forwards;
+}
+
+.survey-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #faa916;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.survey-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: white;
+}
+
+.survey-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.survey-subtitle {
+  font-size: 0.95rem;
+  opacity: 0.95;
+  margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.progress-wrapper {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.progress-text {
+  color: white;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.questions-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.survey-question-item {
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.survey-question-item:last-child {
+  margin-bottom: 0;
+}
+
+.question-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.question-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  background: #faa916;
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.question-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.radio-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.radio-option {
+  position: relative;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.radio-option:hover {
+  border-color: #d1d5db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.radio-option.selected {
+  border-width: 2.5px;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+  transform: scale(1.02);
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+.radio-icon {
+  font-size: 2rem;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.radio-option.selected .radio-icon {
+  transform: scale(1.2) rotate(10deg);
+}
+
+.radio-text {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.radio-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 @media (max-width: 925px) {
@@ -896,5 +1084,91 @@ input:focus {
 
   .stats-container {
     grid-template-columns: 1fr;
+  }
+
+  .radio-group {
+    grid-template-columns: 1fr;
+  }
+
+  .survey-form-container {
+    padding: 1rem;
+  }
+
+  .questions-container {
+    padding: 0rem;
+  }
+
+  .survey-title {
+    font-size: 1.4rem;
+  }
+}
+
+/* Button Group */
+
+/* Notifications */
+.notification {
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-left: 4px solid #dc2626;
+}
+
+.notification.success {
+  background: #dcfce7;
+  color: #166534;
+  border-left: 4px solid #16a34a;
+}
+
+.notification.warning {
+  background: #fef3c7;
+  color: #b45309;
+  border-left: 4px solid #f59e0b;
+}
+
+/* Loading State */
+.survey-loading,
+.survey-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

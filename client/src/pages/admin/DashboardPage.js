@@ -51,7 +51,9 @@ const DashboardPage = () => {
   };
 
   const calculateIKM = () => {
-    const ikmValues = results.map(calculateIKMPerQuestion);
+    const ikmValues = results
+      .filter((result) => result.totalAnswersForThisQuestion > 0)
+      .map(calculateIKMPerQuestion);
     const avgIKM =
       ikmValues.length > 0
         ? ikmValues.reduce((a, b) => a + b, 0) / ikmValues.length

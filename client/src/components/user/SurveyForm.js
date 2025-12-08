@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import surveyService from "../../services/surveyService";
+import "../../../src/App.css";
 
 const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   const [questions, setQuestions] = useState([]);
@@ -7,6 +8,8 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [submitMessage, setSubmitMessage] = useState("");
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showAllQuestions, setShowAllQuestions] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -85,70 +88,158 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
     }
   };
 
-  if (isLoading) return <p>Memuat pertanyaan survei...</p>;
-  if (!isLoading && questions.length === 0 && !error) {
+  const getAnswerColor = (option) => {
+    const colors = {
+      "Sangat Puas": "#10b981",
+      Puas: "#3b82f6",
+      "Kurang Puas": "#f59e0b",
+      "Tidak Puas": "#ef4444",
+    };
+    return colors[option] || "#6b7280";
+  };
+
+  const getAnswerIcon = (option) => {
+    const icons = {
+      "Sangat Puas": "😄",
+      Puas: "🙂",
+      "Kurang Puas": "😐",
+      "Tidak Puas": "☹️",
+    };
+    return icons[option] || "🤔";
+  };
+
+  if (isLoading) {
     return (
-      <p className="notification warning">
-        Saat ini tidak ada survei yang aktif.
-      </p>
+      <div className="survey-loading">
+        <div className="spinner"></div>
+        <p>Memuat pertanyaan survei...</p>
+      </div>
     );
   }
 
+  if (!isLoading && questions.length === 0 && !error) {
+    return (
+      <div className="survey-empty">
+        <p className="notification warning">
+          Saat ini tidak ada survei yang aktif.
+        </p>
+      </div>
+    );
+  }
+
+  const progressPercentage = Math.round(
+    (Object.values(answers).filter((a) => a).length / questions.length) * 100
+  );
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Daftar Survei</h2>
+    <form onSubmit={handleSubmit} className="survey-form-container">
+      <div className="survey-header">
+        <h2 className="survey-title">📋 Survei Kepuasan Pelayanan</h2>
+        <p className="survey-subtitle">
+          Suara Anda sangat berharga untuk meningkatkan kualitas layanan kami
+        </p>
+      </div>
 
-      {error && <p className="notification error">{error}</p>}
-      {submitMessage && <p className="notification success">{submitMessage}</p>}
+      {/* Progress Bar */}
+      <div className="progress-wrapper">
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <p className="progress-text">
+          {Object.values(answers).filter((a) => a).length} dari{" "}
+          {questions.length} pertanyaan
+        </p>
+      </div>
 
-      {questions.map((question) => {
-        const questionIdBase = `question-${question._id}`;
-        return (
-          <div key={question._id} className="survey-question-item">
-            <p>{question.questionText}</p>
-            <div className="radio-group">
-              {["Sangat Puas", "Puas", "Kurang Puas", "Tidak Puas"].map(
-                (option) => {
-                  const radioId = `${questionIdBase}-option-${option.replace(
-                    /\s+/g,
-                    ""
-                  )}`;
-                  return (
-                    <div
-                      key={radioId}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        id={radioId}
-                        name={question._id}
-                        value={option}
-                        checked={answers[question._id] === option}
-                        onChange={() =>
-                          handleAnswerChange(question._id, option)
-                        }
-                        required
-                        style={{ marginRight: "8px", transform: "scale(1.1)" }}
-                      />
-                      <label
-                        htmlFor={radioId}
-                        style={{ cursor: "pointer", flexGrow: 1 }}
+      {error && (
+        <div className="notification error">
+          <span>❌</span> {error}
+        </div>
+      )}
+      {submitMessage && (
+        <div className="notification success">
+          <span>✅</span> {submitMessage}
+        </div>
+      )}
+
+      {/* Questions */}
+      <div className="questions-container">
+        {questions.map((question, index) => {
+          const questionIdBase = `question-${question._id}`;
+          return (
+            <div
+              key={question._id}
+              className="survey-question-item animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="question-header">
+                <span className="question-number">{index + 1}</span>
+                <p className="question-text">{question.questionText}</p>
+              </div>
+
+              <div className="radio-group">
+                {["Sangat Puas", "Puas", "Kurang Puas", "Tidak Puas"].map(
+                  (option) => {
+                    const radioId = `${questionIdBase}-option-${option.replace(
+                      /\s+/g,
+                      ""
+                    )}`;
+                    const isSelected = answers[question._id] === option;
+                    return (
+                      <div
+                        key={radioId}
+                        className={`radio-option ${
+                          isSelected ? "selected" : ""
+                        }`}
+                        style={{
+                          borderColor: isSelected
+                            ? getAnswerColor(option)
+                            : "#e5e7eb",
+                          backgroundColor: isSelected
+                            ? `${getAnswerColor(option)}10`
+                            : "transparent",
+                        }}
                       >
-                        {option}
-                      </label>
-                    </div>
-                  );
-                }
-              )}
+                        <input
+                          type="radio"
+                          id={radioId}
+                          name={question._id}
+                          value={option}
+                          checked={isSelected}
+                          onChange={() =>
+                            handleAnswerChange(question._id, option)
+                          }
+                          required
+                          className="radio-input"
+                        />
+                        <label htmlFor={radioId} className="radio-label">
+                          <span className="radio-icon">
+                            {getAnswerIcon(option)}
+                          </span>
+                          <span className="radio-text">{option}</span>
+                          {isSelected && (
+                            <span
+                              className="radio-check"
+                              style={{ color: getAnswerColor(option) }}
+                            >
+                              ✓
+                            </span>
+                          )}
+                        </label>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
+      {/* Action Buttons */}
       {questions.length > 0 && (
         <div className="button-group">
           <button
@@ -159,7 +250,11 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
           >
             Reset Jawaban
           </button>
-          <button type="submit" className="submit-btn" disabled={isLoading}>
+          <button
+            type="submit"
+            className="submit-btn"
+            disabled={isLoading || progressPercentage < 100}
+          >
             {isLoading ? "Mengirim..." : "Kirim Survei"}
           </button>
         </div>
