@@ -87,6 +87,27 @@ const getHomepageStatistics = async () => {
       "Kurang Puas": "0%",
       "Tidak Puas": "0%",
       totalRespondents: 0,
+      overallIKM: "0.00",
+    };
+  }
+};
+
+const getPublicIKMData = async () => {
+  try {
+    const response = await axios.get(getApiEndpoint("/surveys/public-ikm"));
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching public IKM data:",
+      error.response ? error.response.data : error.message
+    );
+    return {
+      ikm: "0.00",
+      category: "Tidak Baik",
+      categoryColor: "#ef4444",
+      categoryGradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+      totalQuestions: 0,
+      totalResponses: 0,
     };
   }
 };
@@ -109,6 +130,7 @@ const surveyService = {
   submitSurvey,
   checkSubmissionStatus,
   getHomepageStatistics,
+  getPublicIKMData,
   getActiveTokensPublic,
 };
 

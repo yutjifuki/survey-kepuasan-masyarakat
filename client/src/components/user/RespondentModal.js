@@ -110,7 +110,6 @@ const RespondentModal = ({ onSubmit, onCancel }) => {
                 }}
                 maxLength="5"
                 style={{
-                  fontFamily: "monospace",
                   fontSize: "1.1rem",
                   letterSpacing: "2px",
                   flex: 1,

@@ -97,21 +97,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   return (
     <form onSubmit={handleSubmit}>
       <h2>Daftar Survei</h2>
-      {respondentData.tokenCode && (
-        <div
-          style={{
-            backgroundColor: "#e6f9f0",
-            padding: "10px 15px",
-            borderRadius: "4px",
-            marginBottom: "15px",
-            border: "1px solid #2ecc71",
-          }}
-        >
-          <p style={{ margin: 0, color: "#27ae60", fontWeight: "bold" }}>
-            ✓ Menggunakan Token: {respondentData.tokenCode}
-          </p>
-        </div>
-      )}
+
       {error && <p className="notification error">{error}</p>}
       {submitMessage && <p className="notification success">{submitMessage}</p>}
 

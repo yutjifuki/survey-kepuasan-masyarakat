@@ -6,6 +6,7 @@ const {
   getOverallStatistics,
   getAdminDashboardStatistics,
   getResultsByQuestion,
+  getPublicIKMData,
 } = require("../controllers/surveyController");
 const { protectAdmin } = require("../middleware/authMiddleware");
 const { check, body } = require("express-validator");
@@ -41,6 +42,7 @@ router.post(
 );
 router.get("/check-submission", checkSubmissionStatus);
 router.get("/statistics", getOverallStatistics);
+router.get("/public-ikm", getPublicIKMData);
 router.get("/zonadptk/statistics", protectAdmin, getAdminDashboardStatistics);
 router.get("/zonadptk/results-by-question", protectAdmin, getResultsByQuestion);
 
