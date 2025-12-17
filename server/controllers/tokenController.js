@@ -192,7 +192,6 @@ const getActiveTokensPublic = async (req, res) => {
   try {
     const now = new Date();
 
-    // Find all active tokens that are not used and not expired
     const activeTokens = await Token.find({
       isActive: true,
       usedBy: null,

@@ -30,7 +30,6 @@ const ResultsPage = () => {
   });
   const [activeFilters, setActiveFilters] = useState({});
 
-  // Calculate IKM per question
   const calculateIKMPerQuestion = (questionResult) => {
     if (
       !questionResult.totalAnswersForThisQuestion ||
@@ -49,7 +48,6 @@ const ResultsPage = () => {
     return parseFloat(ikm.toFixed(2));
   };
 
-  // Get category by IKM value
   const getCategoryByIKM = (ikm) => {
     if (ikm >= 88.31) return { category: "Sangat Baik", color: "#2ecc71" };
     if (ikm >= 76.61) return { category: "Baik", color: "#3498db" };
@@ -57,7 +55,6 @@ const ResultsPage = () => {
     return { category: "Tidak Baik", color: "#e74c3c" };
   };
 
-  // Generate insight for each question
   const generateInsight = (questionResult, allResults, allIKMs) => {
     const ikm = calculateIKMPerQuestion(questionResult);
     const totalRespondents = questionResult.totalAnswersForThisQuestion;
@@ -83,38 +80,40 @@ const ResultsPage = () => {
       );
     }
 
-    if (ikm >= 88.31) {
-      insights.push(
-        `✓ Tingkat kepuasan sangat tinggi (${ikm.toFixed(
-          1
-        )}%). Layanan sudah memenuhi ekspektasi masyarakat dengan sangat baik.`
-      );
-    } else if (ikm >= 76.61) {
-      if (unsatisfiedPercent > 15) {
+    if (!isBestQuestion && !isWorstQuestion) {
+      if (ikm >= 88.31) {
         insights.push(
-          `⚠ Meski nilai cukup baik, masih ada ${unsatisfiedPercent.toFixed(
+          `✓ Tingkat kepuasan sangat tinggi (${ikm.toFixed(
             1
-          )}% responden yang tidak puas. Perlu evaluasi lebih lanjut.`
+          )}%). Layanan sudah memenuhi ekspektasi masyarakat dengan sangat baik.`
+        );
+      } else if (ikm >= 76.61) {
+        if (unsatisfiedPercent > 15) {
+          insights.push(
+            `⚠ Meski nilai cukup baik, masih ada ${unsatisfiedPercent.toFixed(
+              1
+            )}% responden yang tidak puas. Perlu evaluasi lebih lanjut.`
+          );
+        } else {
+          insights.push(
+            `✓ Nilai baik (${ikm.toFixed(
+              1
+            )}%). Pertahankan konsistensi layanan yang telah dicapai.`
+          );
+        }
+      } else if (ikm >= 65.0) {
+        insights.push(
+          `⚠ Nilai kurang baik (${ikm.toFixed(
+            1
+          )}%) Segera lakukan perbaikan terstruktur.`
         );
       } else {
         insights.push(
-          `✓ Nilai baik (${ikm.toFixed(
+          `❌ Nilai tidak baik (${ikm.toFixed(
             1
-          )}%). Pertahankan konsistensi layanan yang telah dicapai.`
+          )}%). Diperlukan tindakan korektif mendesak untuk meningkatkan kualitas layanan.`
         );
       }
-    } else if (ikm >= 65.0) {
-      insights.push(
-        `⚠ Nilai kurang baik (${ikm.toFixed(
-          1
-        )}%) Segera lakukan perbaikan terstruktur.`
-      );
-    } else {
-      insights.push(
-        `❌ Nilai tidak baik (${ikm.toFixed(
-          1
-        )}%). Diperlukan tindakan korektif mendesak untuk meningkatkan kualitas layanan.`
-      );
     }
 
     return insights.join(" ");
@@ -259,6 +258,8 @@ const ResultsPage = () => {
       37
     );
     doc.text(`Total Pertanyaan: ${results.length}`, 14, 44);
+    doc.text(`IKM: ${avgIKM.toFixed(2)}`, 14, 51);
+    doc.text(`Kategori: ${category.category}`, 14, 58);
 
     // IKM Table
     const ikmTableData = filteredResults.map((q, idx) => {
@@ -274,7 +275,7 @@ const ResultsPage = () => {
     });
 
     autoTable(doc, {
-      startY: 52,
+      startY: 66,
       head: [["No.", "Pertanyaan", "IKM", "Kategori", "Responden"]],
       body: ikmTableData,
       theme: "grid",

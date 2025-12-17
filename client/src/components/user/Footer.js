@@ -58,7 +58,7 @@ const Footer = () => {
           <h4 style={styles.sectionTitle}>Jam Pelayanan</h4>
           <div style={styles.scheduleItem}>
             <span style={styles.day}>Senin - Kamis</span>
-            <span style={styles.time}>07:30 - 16:00a WIB</span>
+            <span style={styles.time}>07:30 - 16:00 WIB</span>
           </div>
           <div style={styles.scheduleItem}>
             <span style={styles.day}>Jumat</span>
