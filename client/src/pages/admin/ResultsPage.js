@@ -59,8 +59,8 @@ const ResultsPage = () => {
     const ikm = calculateIKMPerQuestion(questionResult);
     const totalRespondents = questionResult.totalAnswersForThisQuestion;
     const unsatisfiedCount =
-      (questionResult.answers["Kurang Puas"] || 0) +
-      (questionResult.answers["Tidak Puas"] || 0);
+      (questionResult.answers["Tidak Puas"] || 0) +
+      (questionResult.answers["Kurang Puas"] || 0);
     const unsatisfiedPercent = (unsatisfiedCount / totalRespondents) * 100;
 
     const isBestQuestion = Math.max(...allIKMs) === ikm;
@@ -89,10 +89,11 @@ const ResultsPage = () => {
         );
       } else if (ikm >= 76.61) {
         if (unsatisfiedPercent > 15) {
+          const satisfactionCategory = getCategoryByIKM(ikm).category;
           insights.push(
-            `⚠ Meski nilai cukup baik, masih ada ${unsatisfiedPercent.toFixed(
+            `⚠ Meski nilai ${satisfactionCategory.toLowerCase()}, masih ada ${unsatisfiedPercent.toFixed(
               1
-            )}% responden yang tidak puas. Perlu evaluasi lebih lanjut.`
+            )}% responden yang kurang puas. Perlu evaluasi lebih lanjut.`
           );
         } else {
           insights.push(
