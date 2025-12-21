@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import adminService from "../../services/adminService";
 import ConfirmationModal from "../../components/shared/ConfirmationModal";
+import AlertModal from "../../components/shared/AlertModal";
 import { IoMdAddCircle } from "react-icons/io";
 
 const QuestionsPage = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ type: "", message: "" });
+  const [alert, setAlert] = useState({ type: "", message: "", isOpen: false });
 
   const [showFormModal, setShowFormModal] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -19,10 +20,12 @@ const QuestionsPage = () => {
   const [questionToDelete, setQuestionToDelete] = useState(null);
   const [deleteModalLoading, setDeleteModalLoading] = useState(false);
 
-  const clearNotification = () => {
-    setTimeout(() => {
-      setNotification({ type: "", message: "" });
-    }, 4000);
+  const showAlert = (type, message) => {
+    setAlert({ type, message, isOpen: true });
+  };
+
+  const closeAlert = () => {
+    setAlert({ type: "", message: "", isOpen: false });
   };
 
   const fetchQuestions = useCallback(async () => {
@@ -31,11 +34,7 @@ const QuestionsPage = () => {
       const data = await adminService.getQuestions();
       setQuestions(data || []);
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal memuat kuesioner.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal memuat kuesioner.");
     } finally {
       setLoading(false);
     }
@@ -83,23 +82,16 @@ const QuestionsPage = () => {
           questionText: newQuestionText,
           isActive: newQuestionIsActive,
         });
-        setNotification({
-          type: "success",
-          message: "Pertanyaan berhasil diperbarui!",
-        });
+        showAlert("success", "Pertanyaan berhasil diperbarui!");
       } else {
         await adminService.createQuestion({
           questionText: newQuestionText,
           isActive: newQuestionIsActive,
         });
-        setNotification({
-          type: "success",
-          message: "Pertanyaan baru berhasil ditambahkan!",
-        });
+        showAlert("success", "Pertanyaan baru berhasil ditambahkan!");
       }
       fetchQuestions();
       handleCloseFormModal();
-      clearNotification();
     } catch (err) {
       setFormModalError(err.message || "Gagal menyimpan pertanyaan.");
     } finally {
@@ -122,19 +114,14 @@ const QuestionsPage = () => {
     setDeleteModalLoading(true);
     try {
       await adminService.deleteQuestion(questionToDelete._id);
-      setNotification({
-        type: "success",
-        message: `Pertanyaan "${questionToDelete.questionText}" berhasil dihapus.`,
-      });
+      showAlert(
+        "success",
+        `Pertanyaan "${questionToDelete.questionText}" berhasil dihapus.`
+      );
       fetchQuestions();
       closeDeleteConfirmation();
-      clearNotification();
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal menghapus pertanyaan.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal menghapus pertanyaan.");
     } finally {
       setDeleteModalLoading(false);
     }
@@ -146,15 +133,6 @@ const QuestionsPage = () => {
   return (
     <div className="admin-questions-page">
       <h1>Kelola Kuesioner</h1>
-
-      {notification.message && (
-        <div
-          className={`notification ${notification.type}`}
-          style={{ marginBottom: "15px" }}
-        >
-          {notification.message}
-        </div>
-      )}
 
       <button
         onClick={handleOpenModalForCreate}
@@ -298,6 +276,14 @@ const QuestionsPage = () => {
         title="Konfirmasi Penghapusan"
         message={`Apakah Anda yakin ingin menghapus pertanyaan: "${questionToDelete?.questionText}"? Tindakan ini tidak dapat diurungkan dan akan mempengaruhi data hasil survei terkait.`}
         confirmText={deleteModalLoading ? "Menghapus..." : "Ya, Hapus"}
+      />
+
+      {/* Alert Modal */}
+      <AlertModal
+        type={alert.type}
+        message={alert.message}
+        isOpen={alert.isOpen}
+        onClose={closeAlert}
       />
     </div>
   );

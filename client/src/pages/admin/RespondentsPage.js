@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import adminService from "../../services/adminService";
 import ConfirmationModal from "../../components/shared/ConfirmationModal";
+import AlertModal from "../../components/shared/AlertModal";
 import { RiResetRightFill } from "react-icons/ri";
 import { FaSearch, FaFilter, FaTimes } from "react-icons/fa";
 
 const RespondentsPage = () => {
   const [respondents, setRespondents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ type: "", message: "" });
+  const [alert, setAlert] = useState({ type: "", message: "", isOpen: false });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalRespondents, setTotalRespondents] = useState(0);
@@ -29,10 +30,12 @@ const RespondentsPage = () => {
   const [activeFilters, setActiveFilters] = useState({});
   const [filterCount, setFilterCount] = useState(0);
 
-  const clearNotification = () => {
-    setTimeout(() => {
-      setNotification({ type: "", message: "" });
-    }, 4000);
+  const showAlert = (type, message) => {
+    setAlert({ type, message, isOpen: true });
+  };
+
+  const closeAlert = () => {
+    setAlert({ type: "", message: "", isOpen: false });
   };
 
   const fetchRespondents = useCallback(async (page, appliedFilters = {}) => {
@@ -48,11 +51,7 @@ const RespondentsPage = () => {
       setTotalPages(data.totalPages || 1);
       setTotalRespondents(data.totalRespondents || 0);
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal memuat data responden.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal memuat data responden.");
     } finally {
       setLoading(false);
     }
@@ -85,11 +84,10 @@ const RespondentsPage = () => {
     // Validate age range
     if (filters.ageMin && filters.ageMax) {
       if (parseInt(filters.ageMin) > parseInt(filters.ageMax)) {
-        setNotification({
-          type: "error",
-          message: "Usia minimal tidak boleh lebih besar dari usia maksimal",
-        });
-        clearNotification();
+        showAlert(
+          "error",
+          "Usia minimal tidak boleh lebih besar dari usia maksimal"
+        );
         return;
       }
     }
@@ -97,11 +95,10 @@ const RespondentsPage = () => {
     // Validate date range
     if (filters.dateFrom && filters.dateTo) {
       if (new Date(filters.dateFrom) > new Date(filters.dateTo)) {
-        setNotification({
-          type: "error",
-          message: "Tanggal mulai tidak boleh lebih besar dari tanggal akhir",
-        });
-        clearNotification();
+        showAlert(
+          "error",
+          "Tanggal mulai tidak boleh lebih besar dari tanggal akhir"
+        );
         return;
       }
     }
@@ -141,11 +138,7 @@ const RespondentsPage = () => {
     setShowFilterPanel(false);
 
     if (count > 0) {
-      setNotification({
-        type: "success",
-        message: `Filter diterapkan (${count} filter aktif)`,
-      });
-      clearNotification();
+      showAlert("success", `Filter diterapkan (${count} filter aktif)`);
     }
   };
 
@@ -162,11 +155,7 @@ const RespondentsPage = () => {
     setFilterCount(0);
     setCurrentPage(1);
     setShowFilterPanel(false);
-    setNotification({
-      type: "success",
-      message: "Filter direset",
-    });
-    clearNotification();
+    showAlert("success", "Filter direset");
   };
 
   const openResetConfirmation = () => {
@@ -181,40 +170,25 @@ const RespondentsPage = () => {
     setResetModalLoading(true);
     try {
       const result = await adminService.resetAllRespondents();
-      setNotification({
-        type: "success",
-        message:
-          result.message || "Semua data responden dan survei berhasil direset.",
-      });
+      showAlert(
+        "success",
+        result.message || "Semua data responden dan survei berhasil direset."
+      );
       fetchRespondents(1, activeFilters);
       closeResetConfirmation();
-      clearNotification();
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal mereset data.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal mereset data.");
     } finally {
       setResetModalLoading(false);
     }
   };
 
-  if (loading && respondents.length === 0 && !notification.message)
+  if (loading && respondents.length === 0 && !alert.message)
     return <div style={{ padding: "20px 0" }}>Memuat data responden...</div>;
 
   return (
     <div className="admin-respondents-page">
       <h1>Data Responden</h1>
-
-      {notification.message && (
-        <div
-          className={`notification ${notification.type}`}
-          style={{ marginBottom: "15px" }}
-        >
-          {notification.message}
-        </div>
-      )}
 
       <div
         style={{
@@ -524,6 +498,14 @@ const RespondentsPage = () => {
         message="ANDA YAKIN ingin menghapus SELURUH data responden DAN SEMUA data survei yang telah diisi? Tindakan ini akan menghapus data secara permanen dan TIDAK DAPAT DIURUNGKAN!"
         confirmText={resetModalLoading ? "Mereset..." : "Ya, Hapus Semua Data"}
         cancelText="Batal"
+      />
+
+      {/* Alert Modal */}
+      <AlertModal
+        type={alert.type}
+        message={alert.message}
+        isOpen={alert.isOpen}
+        onClose={closeAlert}
       />
     </div>
   );

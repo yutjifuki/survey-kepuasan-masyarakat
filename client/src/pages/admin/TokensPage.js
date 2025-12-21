@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import adminService from "../../services/adminService";
 import ConfirmationModal from "../../components/shared/ConfirmationModal";
+import AlertModal from "../../components/shared/AlertModal";
 import TokenDetailModal from "../../components/admin/TokenDetailModal";
 import { IoMdAddCircle } from "react-icons/io";
 import { RiResetRightFill } from "react-icons/ri";
@@ -17,7 +18,7 @@ const TokensPage = () => {
   const [statusSort, setStatusSort] = useState(null);
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ type: "", message: "" });
+  const [alert, setAlert] = useState({ type: "", message: "", isOpen: false });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalTokens, setTotalTokens] = useState(0);
@@ -39,11 +40,13 @@ const TokensPage = () => {
 
   const [countdowns, setCountdowns] = useState({});
 
-  const clearNotification = () => {
-    setTimeout(() => {
-      setNotification({ type: "", message: "" });
-    }, 4000);
-  };
+  const showAlert = useCallback((type, message) => {
+    setAlert({ type, message, isOpen: true });
+  }, []);
+
+  const closeAlert = useCallback(() => {
+    setAlert({ type: "", message: "", isOpen: false });
+  }, []);
 
   const fetchTokens = useCallback(async (page) => {
     try {
@@ -54,11 +57,7 @@ const TokensPage = () => {
       setTotalPages(data.totalPages || 1);
       setTotalTokens(data.totalTokens || 0);
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal memuat data token.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal memuat data token.");
     } finally {
       setLoading(false);
     }
@@ -133,31 +132,22 @@ const TokensPage = () => {
   const handleGenerateTokens = async (e) => {
     e.preventDefault();
     if (tokenQuantity < 1 || tokenQuantity > 10) {
-      setNotification({
-        type: "error",
-        message: "Jumlah token harus antara 1-10",
-      });
-      clearNotification();
+      showAlert("error", "Jumlah token harus antara 1-10");
       return;
     }
 
     setGenerateLoading(true);
     try {
       const result = await adminService.generateTokens(tokenQuantity);
-      setNotification({
-        type: "success",
-        message: result.message || `${tokenQuantity} token berhasil dibuat!`,
-      });
+      showAlert(
+        "success",
+        result.message || `${tokenQuantity} token berhasil dibuat!`
+      );
       fetchTokens(1);
       setShowGenerateModal(false);
       setTokenQuantity(1);
-      clearNotification();
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal membuat token.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal membuat token.");
     } finally {
       setGenerateLoading(false);
     }
@@ -165,11 +155,7 @@ const TokensPage = () => {
 
   const handleCopyToken = (tokenCode) => {
     navigator.clipboard.writeText(tokenCode);
-    setNotification({
-      type: "success",
-      message: `Token "${tokenCode}" berhasil disalin!`,
-    });
-    clearNotification();
+    showAlert("success", `Token "${tokenCode}" berhasil disalin!`);
   };
 
   const openResetConfirmation = () => {
@@ -184,19 +170,11 @@ const TokensPage = () => {
     setResetModalLoading(true);
     try {
       const result = await adminService.resetAllTokens();
-      setNotification({
-        type: "success",
-        message: result.message || "Semua token berhasil direset.",
-      });
+      showAlert("success", result.message || "Semua token berhasil direset.");
       fetchTokens(1);
       closeResetConfirmation();
-      clearNotification();
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal mereset token.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal mereset token.");
     } finally {
       setResetModalLoading(false);
     }
@@ -217,19 +195,14 @@ const TokensPage = () => {
     setDeleteModalLoading(true);
     try {
       await adminService.deleteToken(tokenToDelete._id);
-      setNotification({
-        type: "success",
-        message: `Token "${tokenToDelete.tokenCode}" berhasil dihapus.`,
-      });
+      showAlert(
+        "success",
+        `Token "${tokenToDelete.tokenCode}" berhasil dihapus.`
+      );
       fetchTokens(currentPage);
       closeDeleteConfirmation();
-      clearNotification();
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal menghapus token.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal menghapus token.");
     } finally {
       setDeleteModalLoading(false);
     }
@@ -241,11 +214,7 @@ const TokensPage = () => {
       setSelectedToken(tokenDetail);
       setShowDetailModal(true);
     } catch (err) {
-      setNotification({
-        type: "error",
-        message: err.message || "Gagal memuat detail token.",
-      });
-      clearNotification();
+      showAlert("error", err.message || "Gagal memuat detail token.");
     }
   };
 
@@ -254,21 +223,12 @@ const TokensPage = () => {
     setShowDetailModal(false);
   };
 
-  if (loading && tokens.length === 0 && !notification.message)
+  if (loading && tokens.length === 0 && !alert.message)
     return <div style={{ padding: "20px 0" }}>Memuat data token...</div>;
 
   return (
     <div className="admin-tokens-page">
       <h1>Kelola Token Survey</h1>
-
-      {notification.message && (
-        <div
-          className={`notification ${notification.type}`}
-          style={{ marginBottom: "15px" }}
-        >
-          {notification.message}
-        </div>
-      )}
 
       <div
         style={{
@@ -601,6 +561,14 @@ const TokensPage = () => {
       {showDetailModal && selectedToken && (
         <TokenDetailModal token={selectedToken} onClose={closeDetailModal} />
       )}
+
+      {/* Alert Modal */}
+      <AlertModal
+        type={alert.type}
+        message={alert.message}
+        isOpen={alert.isOpen}
+        onClose={closeAlert}
+      />
     </div>
   );
 };

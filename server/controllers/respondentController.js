@@ -104,7 +104,7 @@ const resetAllRespondentData = async (req, res) => {
     console.log("Submissions deletion result:", submissionDeleteResult);
 
     res.json({
-      message: `Semua data responden (${respondentDeleteResult.deletedCount} data) dan semua data survei yang diisi berhasil direset.`,
+      message: `Semua data responden (${respondentDeleteResult.deletedCount} data) berhasil direset.`,
       deletedRespondents: respondentDeleteResult.deletedCount,
       deletedSubmissions: submissionDeleteResult.deletedCount,
     });
