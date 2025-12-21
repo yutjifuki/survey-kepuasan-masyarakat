@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./AlertModal.css";
+import {
+  MdCheckCircle,
+  MdError,
+  MdWarning,
+  MdInfo,
+  MdNotifications,
+} from "react-icons/md";
 
 const AlertModal = ({
   type = "info",
@@ -18,7 +25,7 @@ const AlertModal = ({
     }
 
     if (autoClose) {
-      // Start exit animation 300ms before closing (0.3s animation)
+      // Start exit animation 300ms before closing
       const exitTimer = setTimeout(() => {
         setIsExiting(true);
       }, duration - 300);
@@ -38,17 +45,23 @@ const AlertModal = ({
   if (!isOpen) return null;
 
   const getIcon = () => {
+    const iconStyle = {
+      fontSize: "22px",
+      color: "white",
+      flexShrink: 0,
+    };
+
     switch (type) {
       case "success":
-        return "✅";
+        return <MdCheckCircle style={iconStyle} />;
       case "error":
-        return "❌";
+        return <MdError style={iconStyle} />;
       case "warning":
-        return "⚠️";
+        return <MdWarning style={iconStyle} />;
       case "info":
-        return "ℹ️";
+        return <MdInfo style={iconStyle} />;
       default:
-        return "📢";
+        return <MdNotifications style={iconStyle} />;
     }
   };
 
@@ -67,14 +80,6 @@ const AlertModal = ({
     }
   };
 
-  const getBorderColor = () => {
-    return getBackgroundColor();
-  };
-
-  const getTextColor = () => {
-    return "white";
-  };
-
   return (
     <div
       className={`alert-toast ${isExiting ? "alert-exiting" : ""}`}
@@ -83,7 +88,7 @@ const AlertModal = ({
         top: "20px",
         right: "20px",
         backgroundColor: getBackgroundColor(),
-        color: getTextColor(),
+        color: "white",
         padding: "16px 20px",
         borderRadius: "6px",
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
@@ -94,13 +99,15 @@ const AlertModal = ({
         zIndex: 9999,
       }}
     >
-      <span style={{ fontSize: "20px", flexShrink: 0 }}>{getIcon()}</span>
+      {getIcon()}
+
       <div style={{ flex: 1 }}>
         <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.5" }}>
           {message}
         </p>
       </div>
 
+      {/* Animations */}
       <style>{`
         @keyframes slideInRight {
           from {
@@ -112,7 +119,7 @@ const AlertModal = ({
             opacity: 1;
           }
         }
-        
+
         @keyframes slideOutRight {
           from {
             transform: translateX(0);
@@ -125,11 +132,11 @@ const AlertModal = ({
         }
 
         .alert-toast {
-          animation: slideInRight 0.3s ease-out !important;
+          animation: slideInRight 0.3s ease-out;
         }
 
         .alert-toast.alert-exiting {
-          animation: slideOutRight 0.3s ease-in forwards !important;
+          animation: slideOutRight 0.3s ease-in forwards;
         }
       `}</style>
     </div>
