@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import surveyService from "../../services/surveyService";
-import "../../../src/App.css";
+import "../../App.css";
 
 const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   const [questions, setQuestions] = useState([]);
@@ -10,6 +10,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   const [submitMessage, setSubmitMessage] = useState("");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showAllQuestions, setShowAllQuestions] = useState(false);
+  const [unansweredIds, setUnansweredIds] = useState([]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -34,6 +35,8 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
       ...prevAnswers,
       [questionId]: answerValue,
     }));
+    // Clear unanswered highlight when answered
+    setUnansweredIds((prev) => prev.filter((id) => id !== questionId));
   };
 
   const handleReset = () => {
@@ -42,6 +45,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
     setAnswers(resetAnswers);
     setError("");
     setSubmitMessage("");
+    setUnansweredIds([]);
   };
 
   const handleSubmit = async (e) => {
@@ -51,6 +55,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
 
     const unansweredQuestions = questions.filter((q) => !answers[q._id]);
     if (unansweredQuestions.length > 0) {
+      setUnansweredIds(unansweredQuestions.map((q) => q._id));
       setError(
         `Harap isi semua pertanyaan survei. Pertanyaan "${unansweredQuestions[0].questionText}" belum diisi.`
       );
@@ -154,17 +159,6 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
         </p>
       </div>
 
-      {error && (
-        <div className="notification error">
-          <span>❌</span> {error}
-        </div>
-      )}
-      {submitMessage && (
-        <div className="notification success">
-          <span>✅</span> {submitMessage}
-        </div>
-      )}
-
       {/* Questions */}
       <div className="questions-container">
         {questions.map((question, index) => {
@@ -172,7 +166,9 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
           return (
             <div
               key={question._id}
-              className="survey-question-item animate-fade-in"
+              className={`survey-question-item animate-fade-in ${
+                unansweredIds.includes(question._id) ? "unanswered" : ""
+              }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="question-header">
@@ -212,7 +208,6 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
                           onChange={() =>
                             handleAnswerChange(question._id, option)
                           }
-                          required
                           className="radio-input"
                         />
                         <label htmlFor={radioId} className="radio-label">
@@ -250,11 +245,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
           >
             Reset Jawaban
           </button>
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={isLoading || progressPercentage < 100}
-          >
+          <button type="submit" className="submit-btn" disabled={isLoading}>
             {isLoading ? "Mengirim..." : "Kirim Survei"}
           </button>
         </div>

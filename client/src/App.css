@@ -778,6 +778,11 @@ input:focus {
   border-radius: 4px;
 }
 
+.survey-question-item.unanswered {
+  border: 2px solid #ef4444;
+  background-color: #fef2f2;
+}
+
 .survey-question-item p {
   font-size: 1.1rem;
   font-weight: 600;

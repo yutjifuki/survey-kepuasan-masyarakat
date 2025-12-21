@@ -14,7 +14,6 @@ const { check } = require("express-validator");
 
 router.post("/validate", validateToken);
 router.get("/active-public", getActiveTokensPublic);
-// Admin routes - Protected with authentication
 router.post(
   "/generate",
   protectAdmin,
@@ -34,7 +33,6 @@ router.delete("/reset-all", protectAdmin, resetAllTokens);
 
 router.delete("/:id", protectAdmin, deleteToken);
 
-// Public route for validation - Anyone can validate token
 router.post("/validate", validateToken);
 
 module.exports = router;

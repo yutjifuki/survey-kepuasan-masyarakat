@@ -85,7 +85,7 @@ const ResultsPage = () => {
         insights.push(
           `✓ Tingkat kepuasan sangat tinggi (${ikm.toFixed(
             1
-          )}%). Layanan sudah memenuhi ekspektasi masyarakat dengan sangat baik.`
+          )}). Layanan sudah memenuhi ekspektasi masyarakat dengan sangat baik.`
         );
       } else if (ikm >= 76.61) {
         if (unsatisfiedPercent > 15) {
@@ -99,24 +99,23 @@ const ResultsPage = () => {
           insights.push(
             `✓ Nilai baik (${ikm.toFixed(
               1
-            )}%). Pertahankan konsistensi layanan yang telah dicapai.`
+            )}). Pertahankan konsistensi layanan yang telah dicapai.`
           );
         }
       } else if (ikm >= 65.0) {
         insights.push(
           `⚠ Nilai kurang baik (${ikm.toFixed(
             1
-          )}%) Segera lakukan perbaikan terstruktur.`
+          )}) Segera lakukan perbaikan terstruktur.`
         );
       } else {
         insights.push(
           `❌ Nilai tidak baik (${ikm.toFixed(
             1
-          )}%). Diperlukan tindakan korektif mendesak untuk meningkatkan kualitas layanan.`
+          )}). Diperlukan tindakan korektif mendesak untuk meningkatkan kualitas layanan.`
         );
       }
     }
-
     return insights.join(" ");
   };
 
@@ -427,6 +426,7 @@ const ResultsPage = () => {
                   border: "1px solid #ccc",
                   borderRadius: "4px",
                   boxSizing: "border-box",
+                  marginTop: "5px",
                 }}
               />
             </div>
@@ -447,6 +447,7 @@ const ResultsPage = () => {
                   border: "1px solid #ccc",
                   borderRadius: "4px",
                   boxSizing: "border-box",
+                  marginTop: "5px",
                 }}
               />
             </div>
@@ -467,6 +468,7 @@ const ResultsPage = () => {
                   border: "1px solid #ccc",
                   borderRadius: "4px",
                   boxSizing: "border-box",
+                  marginTop: "5px",
                 }}
               />
             </div>

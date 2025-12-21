@@ -171,7 +171,6 @@ const resetAllRespondents = async () => {
   }
 };
 
-// Token management methods
 const generateTokens = async (quantity) => {
   try {
     const response = await axios.post(
