@@ -298,33 +298,42 @@ const ResultsPage = () => {
         [
           "Sangat Puas",
           q.answers["Sangat Puas"],
-          (
-            (q.answers["Sangat Puas"] / q.totalAnswersForThisQuestion) *
-            100
-          ).toFixed(1) + "%",
+          (q.totalAnswersForThisQuestion > 0
+            ? (
+                (q.answers["Sangat Puas"] / q.totalAnswersForThisQuestion) *
+                100
+              ).toFixed(1)
+            : "0.0") + "%",
         ],
         [
           "Puas",
           q.answers["Puas"],
-          ((q.answers["Puas"] / q.totalAnswersForThisQuestion) * 100).toFixed(
-            1
-          ) + "%",
+          (q.totalAnswersForThisQuestion > 0
+            ? (
+                (q.answers["Puas"] / q.totalAnswersForThisQuestion) *
+                100
+              ).toFixed(1)
+            : "0.0") + "%",
         ],
         [
           "Kurang Puas",
           q.answers["Kurang Puas"],
-          (
-            (q.answers["Kurang Puas"] / q.totalAnswersForThisQuestion) *
-            100
-          ).toFixed(1) + "%",
+          (q.totalAnswersForThisQuestion > 0
+            ? (
+                (q.answers["Kurang Puas"] / q.totalAnswersForThisQuestion) *
+                100
+              ).toFixed(1)
+            : "0.0") + "%",
         ],
         [
           "Tidak Puas",
           q.answers["Tidak Puas"],
-          (
-            (q.answers["Tidak Puas"] / q.totalAnswersForThisQuestion) *
-            100
-          ).toFixed(1) + "%",
+          (q.totalAnswersForThisQuestion > 0
+            ? (
+                (q.answers["Tidak Puas"] / q.totalAnswersForThisQuestion) *
+                100
+              ).toFixed(1)
+            : "0.0") + "%",
         ],
       ];
 
@@ -571,9 +580,11 @@ const ResultsPage = () => {
               color: "#2c3e50",
             }}
           >
-            {(ikmValues.reduce((a, b) => a + b, 0) / ikmValues.length).toFixed(
-              2
-            )}
+            {ikmValues.length > 0
+              ? (
+                  ikmValues.reduce((a, b) => a + b, 0) / ikmValues.length
+                ).toFixed(2)
+              : "0.00"}
           </p>
         </div>
         <div
@@ -611,7 +622,10 @@ const ResultsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {((totalSangatPuas / totalResponses) * 100).toFixed(1)}%
+            {totalResponses > 0
+              ? ((totalSangatPuas / totalResponses) * 100).toFixed(1)
+              : "0.0"}
+            %
           </p>
         </div>
         <div
@@ -629,7 +643,10 @@ const ResultsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {((totalPuas / totalResponses) * 100).toFixed(1)}%
+            {totalResponses > 0
+              ? ((totalPuas / totalResponses) * 100).toFixed(1)
+              : "0.0"}
+            %
           </p>
         </div>
         <div
@@ -649,7 +666,10 @@ const ResultsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {((totalKurangPuas / totalResponses) * 100).toFixed(1)}%
+            {totalResponses > 0
+              ? ((totalKurangPuas / totalResponses) * 100).toFixed(1)
+              : "0.0"}
+            %
           </p>
         </div>
         <div
@@ -669,7 +689,10 @@ const ResultsPage = () => {
               fontWeight: "bold",
             }}
           >
-            {((totalTidakPuas / totalResponses) * 100).toFixed(1)}%
+            {totalResponses > 0
+              ? ((totalTidakPuas / totalResponses) * 100).toFixed(1)
+              : "0.0"}
+            %
           </p>
         </div>
       </div>
@@ -763,38 +786,50 @@ const ResultsPage = () => {
                           {
                             name: "Sangat Puas",
                             nilai: q.answers["Sangat Puas"],
-                            persentase: (
-                              (q.answers["Sangat Puas"] /
-                                q.totalAnswersForThisQuestion) *
-                              100
-                            ).toFixed(1),
+                            persentase:
+                              q.totalAnswersForThisQuestion > 0
+                                ? (
+                                    (q.answers["Sangat Puas"] /
+                                      q.totalAnswersForThisQuestion) *
+                                    100
+                                  ).toFixed(1)
+                                : "0.0",
                           },
                           {
                             name: "Puas",
                             nilai: q.answers["Puas"],
-                            persentase: (
-                              (q.answers["Puas"] /
-                                q.totalAnswersForThisQuestion) *
-                              100
-                            ).toFixed(1),
+                            persentase:
+                              q.totalAnswersForThisQuestion > 0
+                                ? (
+                                    (q.answers["Puas"] /
+                                      q.totalAnswersForThisQuestion) *
+                                    100
+                                  ).toFixed(1)
+                                : "0.0",
                           },
                           {
                             name: "Kurang Puas",
                             nilai: q.answers["Kurang Puas"],
-                            persentase: (
-                              (q.answers["Kurang Puas"] /
-                                q.totalAnswersForThisQuestion) *
-                              100
-                            ).toFixed(1),
+                            persentase:
+                              q.totalAnswersForThisQuestion > 0
+                                ? (
+                                    (q.answers["Kurang Puas"] /
+                                      q.totalAnswersForThisQuestion) *
+                                    100
+                                  ).toFixed(1)
+                                : "0.0",
                           },
                           {
                             name: "Tidak Puas",
                             nilai: q.answers["Tidak Puas"],
-                            persentase: (
-                              (q.answers["Tidak Puas"] /
-                                q.totalAnswersForThisQuestion) *
-                              100
-                            ).toFixed(1),
+                            persentase:
+                              q.totalAnswersForThisQuestion > 0
+                                ? (
+                                    (q.answers["Tidak Puas"] /
+                                      q.totalAnswersForThisQuestion) *
+                                    100
+                                  ).toFixed(1)
+                                : "0.0",
                           },
                         ]}
                       >
@@ -855,10 +890,12 @@ const ResultsPage = () => {
                             style={{ color: item.color, fontWeight: "bold" }}
                           >
                             {item.count} (
-                            {(
-                              (item.count / q.totalAnswersForThisQuestion) *
-                              100
-                            ).toFixed(1)}
+                            {q.totalAnswersForThisQuestion > 0
+                              ? (
+                                  (item.count / q.totalAnswersForThisQuestion) *
+                                  100
+                                ).toFixed(1)
+                              : "0.0"}
                             %)
                           </span>
                         </div>
