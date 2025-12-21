@@ -383,7 +383,7 @@ const TokensPage = () => {
                   const now = new Date();
                   const expiresAt = new Date(token.expiresAt);
                   const isExpired = expiresAt < now;
-                  const isUsed = token.usedBy !== null;
+                  const isUsed = token.usedBy !== null || token.usedAt !== null;
 
                   let status = "Aktif";
                   let statusStyle = tokenStyles.active;

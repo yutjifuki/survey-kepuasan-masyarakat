@@ -15,7 +15,7 @@ const TokenDetailModal = ({ token, onClose }) => {
   const now = new Date();
   const expiresAt = new Date(token.expiresAt);
   const isExpired = expiresAt < now;
-  const isUsed = token.usedBy !== null;
+  const isUsed = token.usedBy !== null || token.usedAt !== null;
 
   let status = "Aktif";
   let statusColor = "#2ecc71";
@@ -84,45 +84,53 @@ const TokenDetailModal = ({ token, onClose }) => {
           </div>
 
           {/* Used By Section */}
-          {isUsed && token.usedBy ? (
-            <div style={detailStyles.usedSection}>
-              <h3 style={detailStyles.sectionTitle}>
-                Informasi Pengguna Token
-              </h3>
+          {isUsed ? (
+            token.usedBy ? (
+              <div style={detailStyles.usedSection}>
+                <h3 style={detailStyles.sectionTitle}>
+                  Informasi Pengguna Token
+                </h3>
 
-              <div style={detailStyles.detailRow}>
-                <strong>Nama Responden:</strong>
-                <span>{token.usedBy.name}</span>
+                <div style={detailStyles.detailRow}>
+                  <strong>Nama Responden:</strong>
+                  <span>{token.usedBy.name}</span>
+                </div>
+
+                {token.usedAt && (
+                  <div style={detailStyles.detailRow}>
+                    <strong>Tanggal Digunakan:</strong>
+                    <span>{formatDate(token.usedAt)}</span>
+                  </div>
+                )}
+
+                {token.usedBy.gender && (
+                  <div style={detailStyles.detailRow}>
+                    <strong>Jenis Kelamin:</strong>
+                    <span>{token.usedBy.gender}</span>
+                  </div>
+                )}
+
+                {token.usedBy.age && (
+                  <div style={detailStyles.detailRow}>
+                    <strong>Usia:</strong>
+                    <span>{token.usedBy.age} tahun</span>
+                  </div>
+                )}
+
+                {token.usedBy.visitFrequency && (
+                  <div style={detailStyles.detailRow}>
+                    <strong>Frekuensi Kunjungan:</strong>
+                    <span>{token.usedBy.visitFrequency}</span>
+                  </div>
+                )}
               </div>
-
-              {token.usedAt && (
-                <div style={detailStyles.detailRow}>
-                  <strong>Tanggal Digunakan:</strong>
-                  <span>{formatDate(token.usedAt)}</span>
-                </div>
-              )}
-
-              {token.usedBy.gender && (
-                <div style={detailStyles.detailRow}>
-                  <strong>Jenis Kelamin:</strong>
-                  <span>{token.usedBy.gender}</span>
-                </div>
-              )}
-
-              {token.usedBy.age && (
-                <div style={detailStyles.detailRow}>
-                  <strong>Usia:</strong>
-                  <span>{token.usedBy.age} tahun</span>
-                </div>
-              )}
-
-              {token.usedBy.visitFrequency && (
-                <div style={detailStyles.detailRow}>
-                  <strong>Frekuensi Kunjungan:</strong>
-                  <span>{token.usedBy.visitFrequency}</span>
-                </div>
-              )}
-            </div>
+            ) : (
+              <div style={detailStyles.notUsedBox}>
+                <p style={detailStyles.notUsedText}>
+                  Token telah digunakan, namun data responden telah dihapus.
+                </p>
+              </div>
+            )
           ) : (
             <div style={detailStyles.notUsedBox}>
               <p style={detailStyles.notUsedText}>
