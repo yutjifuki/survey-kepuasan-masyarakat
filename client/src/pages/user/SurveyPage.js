@@ -41,7 +41,7 @@ const SurveyPage = ({ hasSubmittedInitial, onSurveySubmit }) => {
 
   const handleSurveySubmitSuccess = () => {
     setHasSubmitted(true);
-    if (onSurveySubmit) {
+    if (typeof onSurveySubmit === "function") {
       onSurveySubmit();
     }
   };
