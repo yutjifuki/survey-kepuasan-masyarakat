@@ -140,7 +140,7 @@ const styles = {
     backgroundColor: "rgba(250, 169, 22, 0.1)",
     padding: "0.8rem 1rem",
     borderRadius: "8px",
-    borderLeft: "3px solid #FAA916",
+    // borderLeft: "3px solid #FAA916",
   },
   day: {
     display: "block",

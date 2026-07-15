@@ -331,7 +331,7 @@ const styles = {
     borderRadius: "8px",
     padding: "1.5rem",
     maxWidth: "800px",
-    margin: "0 auto",
+    margin: "2rem auto 0",
   },
   infoTitle: {
     fontSize: "1rem",
