@@ -59,7 +59,7 @@ function App() {
   const [hasSubmittedSurvey, setHasSubmittedSurvey] = useState(false);
   const [isCheckingSubmission, setIsCheckingSubmission] = useState(true);
   const [isAdminAuthLoading, setIsAdminAuthLoading] = useState(true);
-  const [currentAdmin, setCurrentAdmin] = useState(null);
+  const [, setCurrentAdmin] = useState(null);
 
   useEffect(() => {
     const checkUserSubmission = async () => {

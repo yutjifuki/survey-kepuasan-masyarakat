@@ -48,20 +48,23 @@ const TokensPage = () => {
     setAlert({ type: "", message: "", isOpen: false });
   }, []);
 
-  const fetchTokens = useCallback(async (page) => {
-    try {
-      setLoading(true);
-      const data = await adminService.getTokens(page, limit);
-      setTokens(data.tokens || []);
-      setCurrentPage(data.currentPage || 1);
-      setTotalPages(data.totalPages || 1);
-      setTotalTokens(data.totalTokens || 0);
-    } catch (err) {
-      showAlert("error", err.message || "Gagal memuat data token.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchTokens = useCallback(
+    async (page) => {
+      try {
+        setLoading(true);
+        const data = await adminService.getTokens(page, limit);
+        setTokens(data.tokens || []);
+        setCurrentPage(data.currentPage || 1);
+        setTotalPages(data.totalPages || 1);
+        setTotalTokens(data.totalTokens || 0);
+      } catch (err) {
+        showAlert("error", err.message || "Gagal memuat data token.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [showAlert, limit]
+  );
 
   useEffect(() => {
     fetchTokens(currentPage);

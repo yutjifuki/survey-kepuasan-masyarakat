@@ -1,10 +1,10 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo-pemkab-rembang.png";
 import { PiNotePencilBold } from "react-icons/pi";
 
 const Navbar = ({ onNavigate, isSurveyPage, hasSubmitted }) => {
-  const location = useLocation();
+  // const Location = useLocation();
 
   const handleIsiSurveyClick = () => {
     if (!isSurveyPage) {

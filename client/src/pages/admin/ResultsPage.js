@@ -126,34 +126,34 @@ const ResultsPage = () => {
   };
 
   // Calculate monthly IKM
-  const calculateMonthlyIKM = () => {
-    if (!results || results.length === 0) return [];
+  // const calculateMonthlyIKM = () => {
+  //   if (!results || results.length === 0) return [];
 
-    const monthlyData = {};
+  //   const monthlyData = {};
 
-    results.forEach((question) => {
-      const ikm = calculateIKMPerQuestion(question);
+  //   results.forEach((question) => {
+  //     const ikm = calculateIKMPerQuestion(question);
 
-      // Create month key (assuming createdAt or using current month)
-      const month = new Date().toLocaleString("id-ID", {
-        month: "long",
-        year: "numeric",
-      });
+  //     // Create month key (assuming createdAt or using current month)
+  //     const month = new Date().toLocaleString("id-ID", {
+  //       month: "long",
+  //       year: "numeric",
+  //     });
 
-      if (!monthlyData[month]) {
-        monthlyData[month] = [];
-      }
-      monthlyData[month].push(ikm);
-    });
+  //     if (!monthlyData[month]) {
+  //       monthlyData[month] = [];
+  //     }
+  //     monthlyData[month].push(ikm);
+  //   });
 
-    // Calculate average IKM per month
-    return Object.entries(monthlyData).map(([month, ikms]) => ({
-      month,
-      ikm: parseFloat(
-        (ikms.reduce((a, b) => a + b, 0) / ikms.length).toFixed(2)
-      ),
-    }));
-  };
+  //   // Calculate average IKM per month
+  //   return Object.entries(monthlyData).map(([month, ikms]) => ({
+  //     month,
+  //     ikm: parseFloat(
+  //       (ikms.reduce((a, b) => a + b, 0) / ikms.length).toFixed(2)
+  //     ),
+  //   }));
+  // };
 
   const fetchResults = useCallback(async () => {
     try {
@@ -206,7 +206,7 @@ const ResultsPage = () => {
   const ikmValues = results
     .filter((result) => result.totalAnswersForThisQuestion > 0)
     .map(calculateIKMPerQuestion);
-  const monthlyIKM = calculateMonthlyIKM();
+  // const monthlyIKM = calculateMonthlyIKM();
 
   const avgIKM =
     ikmValues.length > 0
