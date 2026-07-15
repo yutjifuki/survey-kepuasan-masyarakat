@@ -7,7 +7,7 @@ const SurveyForm = ({ respondentData, onSurveySubmitSuccess }) => {
   const [answers, setAnswers] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [submitMessage, setSubmitMessage] = useState("");
+  const [setSubmitMessage] = useState("");
   // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   // const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [unansweredIds, setUnansweredIds] = useState([]);
